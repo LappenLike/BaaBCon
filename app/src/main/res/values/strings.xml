@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">WorkingTitle</string>
+
+    //Shown
+    <string name="login_btn_text">LOGIN</string>
+    <string name="signup_text">Anmelden</string>
+    <string name="signup">Anmeldung</string>
+    <string name="login_text">Login</string>
+    <string name="pw_text">Passwort</string>
+    <string name="email">E-Mail</string>
+    <string name="back">Zurück</string>
+    <string name="menu">Menü</string>
+
+    //Navbar
+    <string name="profile">Profil</string>
+    <string name="search">Suche</string>
+    <string name="offer">Angebot</string>
+    <string name="jobs">Aufträge</string>
+    <string name="notifications">Benachrichtigungen</string>
+    <string name="contacts">Kontakte</string>
+    <string name="settings">Einstellungen</string>
+    <string name="logout">Abmelden</string>
+
+    //Error Field
+    <string name="err_email_required">Keine E-Mail eingetragen</string>
+    <string name="err_email_invalid">Keine gültige E-Mail</string>
+    <string name="err_password_required">Kein Passwort eingetragen</string>
+    <string name="err_pw_too_short">Passwort zu kurz</string>
+
+    //Error Toast
+    <string name="email_in_use">Diese E-Mail Adresse ist nicht verfügbar!</string>
+
+    //Success Toast
+    <string name="registration_success">Registrierung erfolgreich!</string>
+
+
+</resources>

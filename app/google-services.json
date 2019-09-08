@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "772862871208",
+    "firebase_url": "https://workingtitle-231a0.firebaseio.com",
+    "project_id": "workingtitle-231a0",
+    "storage_bucket": "workingtitle-231a0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:772862871208:android:272be793d4e2ca4cb6249d",
+        "android_client_info": {
+          "package_name": "com.smithy.lappenlike.workingtitle"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "772862871208-1osl17se6fi65t60utlqm1kdl7qaavs7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBlFsGTn7nZqDZrWwu4P-Z7X_B8G2elAD8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "772862871208-1osl17se6fi65t60utlqm1kdl7qaavs7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
