@@ -95,7 +95,7 @@
         android:visibility="gone"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:id="@+id/pb_progress"
+        android:id="@+id/pb_progressLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

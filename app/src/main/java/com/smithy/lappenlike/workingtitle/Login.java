@@ -19,6 +19,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+
 public class Login extends AppCompatActivity {
 
     private EditText et_email;
@@ -41,7 +42,7 @@ public class Login extends AppCompatActivity {
 
         et_email = findViewById(R.id.et_email);
         et_pw = findViewById(R.id.et_password);
-        progressBar = findViewById(R.id.pb_progress);
+        progressBar = findViewById(R.id.pb_progressLogin);
 
         loginButton();
         signupButton();
@@ -84,6 +85,7 @@ public class Login extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
+                    progressBar.setVisibility(View.GONE);
                     finish();
                     Toast.makeText(getApplicationContext(),"Erfolgreich angemeldet!", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(getApplicationContext(), Profile.class);
@@ -94,8 +96,6 @@ public class Login extends AppCompatActivity {
                 }
             }
         });
-
-        progressBar.setVisibility(View.GONE);
     }
 
     //Prüft, ob die Eingabewerte in den 2 Feldern valide sind
