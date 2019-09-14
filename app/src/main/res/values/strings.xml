@@ -7,9 +7,18 @@
     <string name="signup">Anmeldung</string>
     <string name="login_text">Login</string>
     <string name="pw_text">Passwort</string>
+    <string name="username">Name</string>
     <string name="email">E-Mail</string>
     <string name="back">Zurück</string>
     <string name="menu">Menü</string>
+    <string name="open">Öffnen</string>
+    <string name="close">Schließen</string>
+    <string name="cancel">Abbrechen</string>
+
+    //Dialog
+    <string name="addContact_header">Kontakt hinzufügen</string>
+    <string name="addContact_text">Bitte geben sie die einzigartige ID des Nutzers ein, den Sie zu Ihrer Liste hinzufügen möchten:  </string>
+    <string name="addContact_positive">Hinzufügen</string>
 
     //Navbar
     <string name="profile">Profil</string>
@@ -26,6 +35,8 @@
     <string name="err_email_invalid">Keine gültige E-Mail</string>
     <string name="err_password_required">Kein Passwort eingetragen</string>
     <string name="err_pw_too_short">Passwort zu kurz</string>
+    <string name="err_username_required">Kein Benutzername eingetragen</string>
+    <string name="err_username_invalid">Der Benutzername muss zwischen 2 und 16 Zeichen lang sein</string>
 
     //Error Toast
     <string name="email_in_use">Diese E-Mail Adresse ist nicht verfügbar!</string>
@@ -33,5 +44,25 @@
     //Success Toast
     <string name="registration_success">Registrierung erfolgreich!</string>
 
+    //Tests
+    <string name="max">Max Mustermann</string>
 
+    //Lorem
+    <string name="lorem">Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem
+        Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem
+        Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem
+        Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem
+        Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem
+        Impsum Lorem ImpsumLorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem
+        Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem
+        Impsum Lorem ImpsumLorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem
+        Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem
+        Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem Impsum Lorem
+        Impsum Lorem Impsum</string>
+
+
+    /*Impressum
+        DoNo:           Do Nothing
+        ToDO:           Task that still needs to be done
+    */
 </resources>

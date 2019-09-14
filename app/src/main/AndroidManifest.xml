@@ -9,7 +9,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".BaseActivity"></activity>
+        <activity android:name=".ContactsFragments.Contact"></activity>
+        <activity android:name=".ContactsFragments.ContactsContainer" />
+        <activity android:name=".ContactsFragments.Contacts" />
+        <activity android:name=".Settings" />
+        <activity android:name=".Notifications" />
+        <activity android:name=".Jobs" />
+        <activity android:name=".Offer" />
+        <activity android:name=".Search" />
+        <activity android:name=".BaseActivity" />
         <activity android:name=".SignUp" />
         <activity android:name=".Profile" />
         <activity android:name=".Login">
