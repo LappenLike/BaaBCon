@@ -27,6 +27,7 @@
     <string name="jobs">Aufträge</string>
     <string name="notifications">Benachrichtigungen</string>
     <string name="contacts">Kontakte</string>
+    <string name="gruppe">Gruppe</string>
     <string name="settings">Einstellungen</string>
     <string name="logout">Abmelden</string>
 
@@ -38,11 +39,11 @@
     <string name="err_username_required">Kein Benutzername eingetragen</string>
     <string name="err_username_invalid">Der Benutzername muss zwischen 2 und 16 Zeichen lang sein</string>
 
-    //Error Toast
+    //Toasts
     <string name="email_in_use">Diese E-Mail Adresse ist nicht verfügbar!</string>
-
-    //Success Toast
     <string name="registration_success">Registrierung erfolgreich!</string>
+    <string name="imageUpload_success">Bild gespeichert!</string>
+    <string name="imageUpload_fail">Upload fehlgeschlagen!</string>
 
     //Tests
     <string name="max">Max Mustermann</string>

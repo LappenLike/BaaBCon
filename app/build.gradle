@@ -36,8 +36,13 @@ dependencies {
     implementation 'com.google.firebase:firebase-functions:18.0.0'
     implementation 'com.google.android.material:material:1.1.0-alpha07'
     implementation 'com.google.firebase:firebase-database:18.0.0'
+    implementation 'com.google.firebase:firebase-storage:17.0.0' //f
 
     testImplementation 'junit:junit:4.12'
+
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
+
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }

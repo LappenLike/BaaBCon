@@ -3,6 +3,7 @@ package com.smithy.lappenlike.workingtitle.ContactsFragments;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -15,6 +16,7 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -83,6 +85,10 @@ public class Contacts extends Fragment {
                     FirebaseDatabase.getInstance().getReference("users/" + snapshot.getValue()).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                            CardView contactCard = new CardView(view.getContext());
+//                            CardView.LayoutParams layoutParams = (CardView.LayoutParams) contactCard.getLayoutParams();
+//                            layoutParams.height = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80, getResources().getDisplayMetrics());
+
                             TextView contactUser = new TextView(getContext());
                             contactUser.setText((String) dataSnapshot.child("name").getValue());
                             contactsLinear.addView(contactUser);

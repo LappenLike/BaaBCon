@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "772862871208-l2lofqceljk1po8k7btmc9k42ujpi65s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.smithy.lappenlike.workingtitle",
+            "certificate_hash": "8c4454dc1719fc79ad7ccd55303233dbb0d902df"
+          }
+        },
+        {
           "client_id": "772862871208-1osl17se6fi65t60utlqm1kdl7qaavs7.apps.googleusercontent.com",
           "client_type": 3
         }
