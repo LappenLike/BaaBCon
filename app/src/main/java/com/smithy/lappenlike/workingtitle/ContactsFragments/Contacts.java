@@ -7,10 +7,12 @@ import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -22,10 +24,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,6 +45,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.smithy.lappenlike.workingtitle.BaseActivity;
 import com.smithy.lappenlike.workingtitle.R;
 
@@ -52,10 +62,13 @@ public class Contacts extends Fragment {
     private String userId;
     private DatabaseReference databaseRef;
 
+    private ProgressBar pb_baseProgress;
     private LinearLayout contactsLinear;
     private FloatingActionButton addContact;
     private EditText input;
     private AlertDialog alert;
+
+    private ImageView cardPic;
 
     @Nullable
     @Override
@@ -67,6 +80,9 @@ public class Contacts extends Fragment {
         user = mAuth.getCurrentUser();
         userId = user.getUid();
         databaseRef = FirebaseDatabase.getInstance().getReference("users/"+userId);
+
+        pb_baseProgress = view.findViewById(R.id.pb_baseProgress);
+        pb_baseProgress.setVisibility(View.VISIBLE);
 
         contactsLinear = view.findViewById(R.id.contactsLinear);
         addContact = view.findViewById(R.id.ab_addContact);
@@ -85,13 +101,45 @@ public class Contacts extends Fragment {
                     FirebaseDatabase.getInstance().getReference("users/" + snapshot.getValue()).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                            CardView contactCard = new CardView(view.getContext());
-//                            CardView.LayoutParams layoutParams = (CardView.LayoutParams) contactCard.getLayoutParams();
-//                            layoutParams.height = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80, getResources().getDisplayMetrics());
+                            CardView contactCard = new CardView(view.getContext());
+                            CardView.LayoutParams layoutParams = (CardView.LayoutParams) contactCard.getLayoutParams();
+                            layoutParams.height = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80, getResources().getDisplayMetrics()));
+                            layoutParams.width = CardView.LayoutParams.MATCH_PARENT;
+                            contactCard.setLayoutParams(layoutParams);
 
-                            TextView contactUser = new TextView(getContext());
-                            contactUser.setText((String) dataSnapshot.child("name").getValue());
-                            contactsLinear.addView(contactUser);
+                            LinearLayout cardLinear = new LinearLayout(view.getContext());
+                            cardLinear.getLayoutParams().width = LinearLayout.LayoutParams.MATCH_PARENT;
+                            cardLinear.getLayoutParams().height = LinearLayout.LayoutParams.MATCH_PARENT;
+
+                            TextView nameText = new TextView(view.getContext());
+                            TableLayout.LayoutParams textParams = new TableLayout.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT);
+                            int padding = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics()));
+                            textParams.weight = 3;
+                            nameText.setLayoutParams(textParams);
+                            nameText.setPadding(padding,padding,padding,padding);
+                            nameText.setTextColor(getResources().getColor(R.color.cardViewText));
+
+                            cardPic = new ImageView(view.getContext());
+                            TableLayout.LayoutParams picParams = new TableLayout.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT);
+                            textParams.weight = 3;
+                            cardPic.setLayoutParams(picParams);
+
+                            StorageReference contactImageRef = FirebaseStorage.getInstance().getReference("profilePics/"+dataSnapshot.getKey() + ".jpg");
+                            contactImageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    Glide.with(view.getContext())
+                                            .load(uri.toString())
+                                            .into(cardPic);
+                                }
+                            });
+
+                            cardLinear.addView(nameText);
+                            cardLinear.addView(cardPic);
+                            contactCard.addView(cardLinear);
+                            contactsLinear.addView(contactCard);
+
+                            pb_baseProgress.setVisibility(View.VISIBLE);
                         }
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) { }

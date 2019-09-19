@@ -20,12 +20,12 @@
         android:title="@string/contacts" />
 
     <item android:id="@+id/nav_gruppe"
-        android:title="@string/logout" />
+        android:title="@string/gruppe" />
 
     <item android:id="@+id/nav_settings"
         android:title="@string/settings" />
 
     <item android:id="@+id/nav_logout"
-        android:title="@string/gruppe" />
+        android:title="@string/logout" />
 
 </menu>

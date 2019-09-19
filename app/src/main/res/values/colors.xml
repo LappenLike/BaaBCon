@@ -5,4 +5,5 @@
     <color name="colorAccent">#00574B</color>
     <color name="correct">#05E836</color>
     <color name="wrong">#FF3220</color>
+    <color name="cardViewText">#000000</color>
 </resources>
