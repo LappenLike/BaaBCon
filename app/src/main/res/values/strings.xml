@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">WorkingTitle</string>
+    <string name="app_name">BaaBCon</string>
 
     //Shown
     <string name="login_btn_text">LOGIN</string>
@@ -42,8 +42,11 @@
     //Toasts
     <string name="email_in_use">Diese E-Mail Adresse ist nicht verfügbar!</string>
     <string name="registration_success">Registrierung erfolgreich!</string>
+    <string name="login_success">Erfolgreich angemeldet!</string>
     <string name="imageUpload_success">Bild gespeichert!</string>
     <string name="imageUpload_fail">Upload fehlgeschlagen!</string>
+    <string name="noUserFound">Kein Benutzer gefunden!</string>
+    <string name="userAdded">Benutzer %1$s wurde hinzugefügt!</string>
 
     //Tests
     <string name="max">Max Mustermann</string>
@@ -63,7 +66,7 @@
 
 
     /*Impressum
-        DoNo:           Do Nothing
-        ToDO:           Task that still needs to be done
+    DoNo: Do Nothing
+    ToDO: Task that still needs to be done
     */
 </resources>

@@ -2,16 +2,13 @@ package com.smithy.lappenlike.workingtitle.ContactsFragments;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -24,7 +21,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -36,10 +32,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -47,22 +42,21 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.smithy.lappenlike.workingtitle.BaseActivity;
 import com.smithy.lappenlike.workingtitle.R;
-
-import java.util.HashMap;
 
 public class Contacts extends Fragment {
 
     private View view;
     private ContactsContainer contactsContainer;
 
+    private ConstraintLayout contactsLayout;
+
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private String userId;
-    private DatabaseReference databaseRef;
+    private DatabaseReference userRef;
 
-    private ProgressBar pb_baseProgress;
+    private ProgressBar pb_contactsProgress;
     private LinearLayout contactsLinear;
     private FloatingActionButton addContact;
     private EditText input;
@@ -76,25 +70,32 @@ public class Contacts extends Fragment {
         view = inflater.inflate(R.layout.contacts_activity, container, false);
         contactsContainer = (ContactsContainer) getActivity();
 
+        contactsLayout = view.findViewById(R.id.contactsLayout);
+
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         userId = user.getUid();
-        databaseRef = FirebaseDatabase.getInstance().getReference("users/"+userId);
-
-        pb_baseProgress = view.findViewById(R.id.pb_baseProgress);
-        pb_baseProgress.setVisibility(View.VISIBLE);
+        userRef = FirebaseDatabase.getInstance().getReference("users/"+userId);
 
         contactsLinear = view.findViewById(R.id.contactsLinear);
         addContact = view.findViewById(R.id.ab_addContact);
         input = new EditText(view.getContext());
 
-        initContacts();
-        initAddingContacts();
+        pb_contactsProgress = view.findViewById(R.id.pb_contactsProgress);
+
         return view;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        initContacts();
+        initAddingContacts();
+    }
+
     private void initContacts(){
-        databaseRef.child("contacts").addValueEventListener(new ValueEventListener() {
+        userRef.child("contacts").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
@@ -139,7 +140,7 @@ public class Contacts extends Fragment {
                             contactCard.addView(cardLinear);
                             contactsLinear.addView(contactCard);
 
-                            pb_baseProgress.setVisibility(View.VISIBLE);
+//                            pb_baseProgress.setVisibility(View.VISIBLE);
                         }
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) { }
@@ -180,12 +181,29 @@ public class Contacts extends Fragment {
 
         builder.setPositiveButton(getString(R.string.addContact_positive), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
+                pb_contactsProgress.setVisibility(View.VISIBLE);
                 DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users/");
                 usersRef.orderByChild("userId").equalTo(input.getText().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for(DataSnapshot snap : dataSnapshot.getChildren()){
-                            databaseRef.child("contacts").push().setValue(snap.getKey());
+                        if(dataSnapshot.getChildrenCount()>0){
+                            //always 1, find a better way
+                            for(final DataSnapshot snap : dataSnapshot.getChildren()){
+                                userRef.child("contacts").push().setValue(snap.getKey()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if(task.isSuccessful()){
+                                            Snackbar.make(contactsLayout, getString(R.string.userAdded, snap.child("name")), Snackbar.LENGTH_SHORT).show();
+                                        }else{
+                                            Snackbar.make(contactsLayout, getString(R.string.noUserFound), Snackbar.LENGTH_SHORT).show();
+                                        }
+                                        pb_contactsProgress.setVisibility(View.GONE);
+                                    }
+                                });
+                            }
+                        } else{
+                            Snackbar.make(contactsLayout, R.string.noUserFound, Snackbar.LENGTH_SHORT).show();
+                            pb_contactsProgress.setVisibility(View.GONE);
                         }
                     }
                     @Override

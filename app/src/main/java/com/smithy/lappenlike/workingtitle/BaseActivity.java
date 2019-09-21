@@ -27,7 +27,6 @@ public class BaseActivity extends AppCompatActivity {
 
     public static FirebaseAuth mAuth;
     public static FirebaseUser user;
-    public static String userId;
     public static DatabaseReference databaseRef;
     public static DatabaseReference weaponRef;
 
@@ -44,11 +43,9 @@ public class BaseActivity extends AppCompatActivity {
         DatabaseReference connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
-        userId = user.getUid();
         databaseRef = FirebaseDatabase.getInstance().getReference("users/"+user.getUid());
 
-        userId = user.getUid();
-        weaponRef = FirebaseDatabase.getInstance().getReference("users/"+userId+"/weapons");
+        weaponRef = FirebaseDatabase.getInstance().getReference("users/"+user.getUid()+"/weapons");
 
         //logt den User aus wenn keine Verbindung zur Datenbank besteht (instant!)
         connectedRef.addValueEventListener(new ValueEventListener() {

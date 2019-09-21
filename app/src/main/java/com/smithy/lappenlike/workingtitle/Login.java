@@ -12,15 +12,19 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 
 public class Login extends AppCompatActivity {
+
+    private ConstraintLayout loginActivity;
 
     private EditText et_email;
     private EditText et_pw;
@@ -33,9 +37,10 @@ public class Login extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
+
+        loginActivity = findViewById(R.id.loginLayout);
 
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
@@ -87,12 +92,12 @@ public class Login extends AppCompatActivity {
                 if(task.isSuccessful()){
                     progressBar.setVisibility(View.GONE);
                     finish();
-                    Toast.makeText(getApplicationContext(),"Erfolgreich angemeldet!", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(getApplicationContext(), Profile.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //zurück führt nicht wieder zum login -> clear
                     startActivity(intent);
                 } else{
-                    Toast.makeText(getApplicationContext(),task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    Snackbar.make(loginActivity, R.string.registration_success, Snackbar.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),task.getException().getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
         });

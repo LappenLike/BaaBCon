@@ -9,16 +9,18 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.databinding.DataBindingUtil;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -30,23 +32,28 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.smithy.lappenlike.workingtitle.databinding.ProfileActivityBinding;
 
 import java.io.IOException;
 
-public class Profile extends BaseActivity {
+public class Profile extends BaseActivity implements ActivityContract.View {
 
     private final int CHOOSE_IMAGE = 100;
+
+    private ProfileActivityBinding binding;
+    private ProfileModel profileModel;
 
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private FirebaseDatabase fireInstance;
     private String userId;
-    private DatabaseReference databaseRef;
+    private DatabaseReference userRef;
     private StorageReference profileImageRef;
 
-    private ProgressBar pb_progressProfile;
+    private ConstraintLayout profileLayout;
 
-    private TextView tv_profileName;
+    private ProgressBar pb_progressProfile;
+    private TextView tv_profileDescription;
     private ImageView iv_profileImage;
 
     private Uri profileImageUri;
@@ -56,30 +63,44 @@ public class Profile extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.addContentView(R.layout.profile_activity);
+        binding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.profile_activity, (ConstraintLayout) findViewById(R.id.profileLayout), true);
+
+        ProfilePresenter presenter = new ProfilePresenter(this, getApplicationContext());
+        binding.setPresenter(presenter);
+        profileModel = new ProfileModel();
+        binding.setProfileModel(profileModel);
 
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         userId = user.getUid();
         fireInstance = FirebaseDatabase.getInstance();
+        userRef = fireInstance.getReference("users/"+userId);
+
+        profileLayout = findViewById(R.id.profileLayout);
 
         databaseRef = fireInstance.getReference("users/"+userId);
         profileImageRef = FirebaseStorage.getInstance().getReference("profilePics/"+user.getUid() + ".jpg");
 
         pb_progressProfile = findViewById(R.id.pb_progressProfile);
 
-        tv_profileName = findViewById(R.id.tv_profileName);
+        tv_profileDescription = findViewById(R.id.tv_profileDescription);
         iv_profileImage = findViewById(R.id.iv_profileImage);
 
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
         initProfileData();
         initProfileImage();
     }
 
     private void initProfileData(){
-        DatabaseReference nameRef = fireInstance.getReference("users/"+userId+"/name");
-        nameRef.addValueEventListener(new ValueEventListener() {
+        userRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                tv_profileName.setText(dataSnapshot.getValue(String.class));
+                profileModel.setUsername(dataSnapshot.child("name").getValue(String.class));
+                profileModel.setProfileDescription(dataSnapshot.child("profileDescription").getValue(String.class));
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -109,6 +130,7 @@ public class Profile extends BaseActivity {
         });
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -136,7 +158,7 @@ public class Profile extends BaseActivity {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getApplicationContext(),getString(R.string.imageUpload_fail), Toast.LENGTH_SHORT).show();
+                    Snackbar.make(profileLayout, R.string.imageUpload_fail, Snackbar.LENGTH_SHORT).show();
                     System.out.println(e.getMessage());
                     pb_progressProfile.setVisibility(View.GONE);
                 }
@@ -152,7 +174,7 @@ public class Profile extends BaseActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
-                    Toast.makeText(getApplicationContext(),getString(R.string.imageUpload_success), Toast.LENGTH_SHORT).show();
+                    Snackbar.make(profileLayout, R.string.imageUpload_success, Snackbar.LENGTH_SHORT).show();
                     pb_progressProfile.setVisibility(View.GONE);
                 }
             }

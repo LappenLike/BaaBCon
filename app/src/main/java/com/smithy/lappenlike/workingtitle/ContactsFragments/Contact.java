@@ -26,4 +26,9 @@ public class Contact extends Fragment {
         return view;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
 }

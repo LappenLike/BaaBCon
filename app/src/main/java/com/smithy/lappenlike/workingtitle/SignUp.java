@@ -13,9 +13,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
@@ -33,6 +35,8 @@ import java.util.TimeZone;
 
 public class SignUp extends AppCompatActivity {
 
+    private ConstraintLayout signupActivity;
+
     private EditText et_pw;
     private EditText et_email;
     private EditText et_username;
@@ -47,6 +51,8 @@ public class SignUp extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_up_activity);
+
+        signupActivity = findViewById(R.id.signupActivity);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -101,15 +107,17 @@ public class SignUp extends AppCompatActivity {
                     setAllDatabasePaths();
                     pb_progress.setVisibility(View.GONE);
                     finish();
-                    Toast.makeText(getApplicationContext(),getString(R.string.registration_success), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.registration_success), Toast.LENGTH_SHORT).show();
+                    Snackbar.make(signupActivity, R.string.registration_success, Snackbar.LENGTH_SHORT).show();
                     startActivity(new Intent(getApplicationContext(), Profile.class));
                 }else{
                     if(task.getException() instanceof FirebaseAuthUserCollisionException){
-                        Toast.makeText(getApplicationContext(),getString(R.string.email_in_use), Toast.LENGTH_SHORT).show();
+                        Snackbar.make(signupActivity, R.string.email_in_use, Snackbar.LENGTH_SHORT).show();
                     }
                     else{
-                        Toast.makeText(getApplicationContext(),task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        Snackbar.make(signupActivity, task.getException().getMessage(), Snackbar.LENGTH_SHORT).show();
                     }
+                    pb_progress.setVisibility(View.GONE);
                 }
             }
         });
