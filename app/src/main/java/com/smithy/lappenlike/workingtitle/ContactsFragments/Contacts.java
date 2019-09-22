@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -43,6 +44,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.smithy.lappenlike.workingtitle.R;
+
+import java.util.Iterator;
 
 public class Contacts extends Fragment {
 
@@ -98,54 +101,72 @@ public class Contacts extends Fragment {
         userRef.child("contacts").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    FirebaseDatabase.getInstance().getReference("users/" + snapshot.getValue()).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            CardView contactCard = new CardView(view.getContext());
-                            CardView.LayoutParams layoutParams = (CardView.LayoutParams) contactCard.getLayoutParams();
-                            layoutParams.height = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80, getResources().getDisplayMetrics()));
-                            layoutParams.width = CardView.LayoutParams.MATCH_PARENT;
-                            contactCard.setLayoutParams(layoutParams);
+                Iterator<DataSnapshot> snapshots = dataSnapshot.getChildren().iterator();
+                createCardView(snapshots);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
+    }
 
-                            LinearLayout cardLinear = new LinearLayout(view.getContext());
-                            cardLinear.getLayoutParams().width = LinearLayout.LayoutParams.MATCH_PARENT;
-                            cardLinear.getLayoutParams().height = LinearLayout.LayoutParams.MATCH_PARENT;
+    private void createCardView(final Iterator<DataSnapshot> snapshots){
+        FirebaseDatabase.getInstance().getReference("users/" + snapshots.next().getValue()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                CardView contactCard = new CardView(view.getContext());
+                CardView.LayoutParams layoutParams = new CardView.LayoutParams(CardView.LayoutParams.MATCH_PARENT,
+                        Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80, getResources().getDisplayMetrics())));
+                contactCard.setLayoutParams(layoutParams);
+                contactCard.setRadius(20);
+                contactCard.setBackgroundColor(getResources().getColor(R.color.cardViewColor1));
 
-                            TextView nameText = new TextView(view.getContext());
-                            TableLayout.LayoutParams textParams = new TableLayout.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT);
-                            int padding = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics()));
-                            textParams.weight = 3;
-                            nameText.setLayoutParams(textParams);
-                            nameText.setPadding(padding,padding,padding,padding);
-                            nameText.setTextColor(getResources().getColor(R.color.cardViewText));
+                LinearLayout cardLinear = new LinearLayout(view.getContext());
+                cardLinear.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
 
-                            cardPic = new ImageView(view.getContext());
-                            TableLayout.LayoutParams picParams = new TableLayout.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT);
-                            textParams.weight = 3;
-                            cardPic.setLayoutParams(picParams);
+                TextView nameText = new TextView(view.getContext());
+                TableLayout.LayoutParams textParams = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT);
+                int padding = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics()));
+                textParams.weight = 1;
+                nameText.setLayoutParams(textParams);
+                nameText.setPadding(padding,padding,padding,padding);
+                int textSize = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics()));
+                nameText.setTextSize(textSize);
+                nameText.setTypeface(null, Typeface.BOLD);
+                nameText.setGravity(Gravity.CENTER_VERTICAL);
+                nameText.setText(dataSnapshot.child("name").getValue(String.class));
 
-                            StorageReference contactImageRef = FirebaseStorage.getInstance().getReference("profilePics/"+dataSnapshot.getKey() + ".jpg");
-                            contactImageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri uri) {
-                                    Glide.with(view.getContext())
-                                            .load(uri.toString())
-                                            .into(cardPic);
-                                }
-                            });
+                cardPic = new ImageView(view.getContext());
+                TableLayout.LayoutParams picParams = new TableLayout.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT);
+                picParams.weight = 3;
+                int picPadding = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics()));
+                cardPic.setPadding(picPadding,picPadding,picPadding,picPadding);
+                cardPic.setLayoutParams(picParams);
+                cardPic.setBackgroundColor(getResources().getColor(R.color.cardViewColor2));
 
-                            cardLinear.addView(nameText);
-                            cardLinear.addView(cardPic);
-                            contactCard.addView(cardLinear);
-                            contactsLinear.addView(contactCard);
+                cardLinear.addView(nameText);
+                cardLinear.addView(cardPic);
+                contactCard.addView(cardLinear);
+                contactsLinear.addView(contactCard);
 
-//                            pb_baseProgress.setVisibility(View.VISIBLE);
+                StorageReference contactImageRef = FirebaseStorage.getInstance().getReference("profilePics/"+dataSnapshot.getKey() + ".jpg");
+                contactImageRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+                        if(task.isSuccessful()){
+                            Glide.with(view.getContext())
+                                    .load(task.getResult().toString())
+                                    .into(cardPic);
+                            if(snapshots.hasNext()){
+                                createCardView(snapshots);
+                            }
+                        } else{
+                            cardPic.setImageDrawable(getResources().getDrawable(R.drawable.default_profile));
+                            if(snapshots.hasNext()){
+                                createCardView(snapshots);
+                            }
                         }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) { }
-                    });
-                }
+                    }
+                });
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }

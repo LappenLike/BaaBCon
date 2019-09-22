@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 
 import com.bumptech.glide.Glide;
@@ -108,12 +109,16 @@ public class Profile extends BaseActivity implements ActivityContract.View {
             }
         });
 
-        profileImageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        profileImageRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
             @Override
-            public void onSuccess(Uri uri) {
-                Glide.with(getApplicationContext())
-                        .load(uri.toString()) // Uri of the picture
-                        .into(iv_profileImage);
+            public void onComplete(@NonNull Task<Uri> task) {
+                if(task.isSuccessful()){
+                    Glide.with(getApplicationContext())
+                            .load(task.getResult().toString()) // Uri of the picture
+                            .into(iv_profileImage);
+                }else{
+                    iv_profileImage.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.default_profile, null));
+                }
             }
         });
     }
